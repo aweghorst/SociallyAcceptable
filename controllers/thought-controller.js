@@ -3,7 +3,7 @@ const { User, Thought } = require("../models");
 const thoughtController = {
   //get all thoughts
   getAllThoughts(req, res) {
-    User.find({})
+    Thought.find({})
       .populate({
         path: "reactions",
         select: "-__v",
@@ -31,13 +31,13 @@ const thoughtController = {
       });
   },
   //create a new thought
-  addThought({ params, body }, res) {
+  addThought({ body }, res) {
     console.log(body);
     Thought.create(body)
-      .then(({ _id }) => {
+      .then(dbThoughtData => {
         return User.findOneAndUpdate(
-          { _id: params.userId },
-          { $push: { thoughts: _id } },
+          { _id: body.userId },
+          { $push: { thoughts: dbThoughtData._id } },
           { new: true }
         );
       })
@@ -85,8 +85,9 @@ const thoughtController = {
   },
   //remove thought
   deleteThought({ params }, res) {
-    Thought.findOneAndDelete({ _id: params.thoughtId })
+    Thought.findByIdAndDelete({ _id: params.id })
       .then(deletedThought => {
+        console.log(deletedThought);
         if (!deletedThought) {
           return res.status(404).json({ message: "No thought with this id!" });
         }
@@ -98,7 +99,8 @@ const thoughtController = {
       })
       .then(dbUserData => {
         if (!dbUserData) {
-          res.status(404).json({ message: "no user found with this id!" });
+          console.log("--------------", dbUserData);
+          res.status(404).json({ message: "Deleted!" });
           return;
         }
         res.json(dbUserData);
@@ -108,8 +110,8 @@ const thoughtController = {
   //remove reaction
   deleteReaction({ params }, res) {
     Thought.findOneAndUpdate(
-      { _id: params.ThoughtId },
-      { $pull: { reactions: { _id: params.reactionId } } },
+      { _id: params.thoughtId },
+      { $pull: { reactions: { reactionId: params.reactionId } } },
       { new: true }
     )
       .then(dbThoughtData => res.json(dbThoughtData))
