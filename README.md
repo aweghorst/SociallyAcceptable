@@ -27,9 +27,11 @@
   Download the code, install the dependencies, and then use an API REST client to view, create, update, and delete users and thoughts.  Creation and Deletion of friends and reactions is also possible using this API.
   
   
- ### User Routes Examples:
+  ### User Routes Examples:
 
-  https://user-images.githubusercontent.com/80176140/126907419-efd1fa22-d464-45e9-9abe-4018ea804328.mp4
+  https://user-images.githubusercontent.com/80176140/126930056-ef48cfe9-be56-42d2-93e3-1d963b81c679.mp4
+
+
 
 ----------------------------------
   ### Thought Routes Examples:
